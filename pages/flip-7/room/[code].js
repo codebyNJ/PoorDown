@@ -10,7 +10,8 @@ import GameHeader from '../../../components/card-game/GameHeader';
 import ScoreboardSidebar from '../../../components/card-game/ScoreboardSidebar';
 import RulesButton from '../../../components/card-game/RulesButton';
 import CardTable from '../../../components/card-game/CardTable';
-import { playDraw, playYourTurn, playBust, playRoundStart, playRoundEnd, isMuted, toggleMuted } from '../../../lib/sound';
+import SoundControl from '../../../components/card-game/SoundControl';
+import { playDraw, playYourTurn, playBust, playRoundStart, playRoundEnd } from '../../../lib/sound';
 
 const GAME_COLOR = '#FF6B35';
 const GAME_GLOW = 'rgba(255,107,53,0.4)';
@@ -566,7 +567,6 @@ export default function Flip7Room() {
   const [onlineUuids, setOnlineUuids] = useState(null); // null until awareness fires
   const [disconnectTimes, setDisconnectTimes] = useState({}); // uuid → timestamp, local
   const [tick, setTick] = useState(0);
-  const [muted, setMutedState] = useState(false);
   const [gameState, setGameState] = useState({
     phase: 'connecting', players: [], deck: [],
     currentPlayerIdx: 0, pendingAction: null,
@@ -688,10 +688,6 @@ export default function Flip7Room() {
       doc.destroy();
     };
   }, [code]);
-
-  useEffect(() => {
-    setMutedState(isMuted());
-  }, []);
 
   // Reset last drawn card when the active player changes
   useEffect(() => {
@@ -1218,14 +1214,8 @@ export default function Flip7Room() {
     </div>
   );
 
-  const muteButton = (
-    <button
-      onClick={() => setMutedState(toggleMuted())}
-      title={muted ? 'Unmute sounds' : 'Mute sounds'}
-      style={{ position: 'fixed', bottom: 20, left: 20, zIndex: 301, width: 40, height: 40, borderRadius: '50%', backgroundColor: PANEL, border: `2px solid ${PANEL_BORDER}`, color: TEXT_DIM, fontSize: 16, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 4px 16px rgba(0,0,0,0.4)' }}
-    >
-      {muted ? '🔇' : '🔊'}
-    </button>
+  const soundControl = (
+    <SoundControl gameColor={GAME_COLOR} panel={PANEL} panelBorder={PANEL_BORDER} textDim={TEXT_DIM} text={TEXT} />
   );
 
   // ── LOBBY ────────────────────────────────────────────────────────────────────
@@ -1279,7 +1269,7 @@ export default function Flip7Room() {
             </div>
           </div>
         </div>
-        {muteButton}
+        {soundControl}
       </>
     );
   }
@@ -1533,7 +1523,7 @@ export default function Flip7Room() {
           }
           cssAnimations={flip7CssAnimations}
         />
-        {muteButton}
+        {soundControl}
       </>
     );
   }
@@ -1658,7 +1648,7 @@ export default function Flip7Room() {
         </div>
         <button onClick={() => setShowRules(v => !v)} style={{ position: 'fixed', bottom: 20, right: 20, zIndex: 301, width: 40, height: 40, borderRadius: '50%', backgroundColor: showRules ? GAME_COLOR : PANEL, border: `2px solid ${showRules ? GAME_COLOR : PANEL_BORDER}`, color: showRules ? '#fff' : TEXT_DIM, fontFamily: 'Inter, sans-serif', fontSize: 16, fontWeight: '700', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 4px 16px rgba(0,0,0,0.4)', transition: 'background-color 0.2s' }}>?</button>
         <RulesPanel open={showRules} onClose={() => setShowRules(false)} />
-        {muteButton}
+        {soundControl}
         <style>{`@keyframes cardAppear { from { transform: scale(0.6) rotateY(90deg); opacity: 0; } to { transform: scale(1) rotateY(0deg); opacity: 1; } }`}</style>
       </>
     );
@@ -1707,7 +1697,7 @@ export default function Flip7Room() {
         </div>
         <button onClick={() => setShowRules(v => !v)} style={{ position: 'fixed', bottom: 20, right: 20, zIndex: 301, width: 40, height: 40, borderRadius: '50%', backgroundColor: showRules ? GAME_COLOR : PANEL, border: `2px solid ${showRules ? GAME_COLOR : PANEL_BORDER}`, color: showRules ? '#fff' : TEXT_DIM, fontFamily: 'Inter, sans-serif', fontSize: 16, fontWeight: '700', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 4px 16px rgba(0,0,0,0.4)', transition: 'background-color 0.2s' }}>?</button>
         <RulesPanel open={showRules} onClose={() => setShowRules(false)} />
-        {muteButton}
+        {soundControl}
       </>
     );
   }
