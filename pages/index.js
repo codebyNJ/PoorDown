@@ -59,6 +59,15 @@ const GAMES = [
     glow: 'rgba(229,57,53,0.35)',
     available: true,
   },
+  {
+    id: 'plunder',
+    name: 'Pirate Smash',
+    asset: '/kenney_pirate-kit/Previews/ship-pirate-medium.png',
+    description: '3D arena ship-battler. 3 lives, weapon crates, last ship floating wins. Up to 6 captains.',
+    color: '#1A6B7A',
+    glow: 'rgba(26,107,122,0.45)',
+    available: true,
+  },
 ];
 
 const TOKEN_ICONS = {
